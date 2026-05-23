@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class ActionStrategy
 {
     public bool isComplete;
@@ -8,8 +6,8 @@ public class ActionStrategy
 public class Action
 {
     public float cost;
-    public Property[] conditions;
-    public Property[] effects;
+    public WorldState conditions;
+    public WorldState effects;
 
     public void Start()
     {

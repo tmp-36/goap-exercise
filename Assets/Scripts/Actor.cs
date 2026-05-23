@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class Actor : MonoBehaviour
 {
     [SerializeField] Goal[] goals;
-    [SerializeField] Action[] actions;
+    public Action[] actions;
     public Blackboard beliefs;
     public Blackboard worldState;
 
@@ -36,5 +36,13 @@ public class Actor : MonoBehaviour
         {
             Planner.CreatePlan(this, goals);
         }
+    }
+
+    public WorldState GetPlanningState()
+    {
+        WorldState result = new WorldState();
+        result.values = beliefs.properties.values | worldState.properties.values;
+        result.mask = beliefs.properties.mask | worldState.properties.mask;
+        return result;
     }
 }
