@@ -1,19 +1,18 @@
 using System;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using static Unity.Burst.Intrinsics.X86;
 
-enum PropFlag
+[Flags]
+public enum WorldFlags : uint
 {
     NONE = 0,
     LIGHT_ON = 1 << 0,
+    NEAR_SWITCH = 1 << 1,
 };
 
 [Serializable]
 public struct WorldState
 {
-    public uint values;
-    public uint mask;
+    public WorldFlags values;
+    public WorldFlags mask;
 
     public static bool IsCompatible(WorldState current, WorldState required)
     {
@@ -25,15 +24,15 @@ public struct WorldState
     /// </summary>
     public static bool AdvancesGoal(WorldState required, WorldState effects)
     {
-        uint overlap = required.mask & effects.mask;
+        WorldFlags overlap = required.mask & effects.mask;
 
         if (overlap == 0)
         {
             return false;
         }
 
-        uint difference = effects.values ^ required.values;
-        uint matching = ~difference & overlap;
+        WorldFlags difference = effects.values ^ required.values;
+        WorldFlags matching = ~difference & overlap;
         return matching > 0;
     }
 

@@ -703,12 +703,56 @@ MonoBehaviour:
   goals:
   - priority: 0
     desiredState:
-    - key: lightOn
-      value: 1
-  beliefs: {fileID: 0}
-  worldState: {fileID: 0}
+      values: 1
+      mask: 1
+  actions:
+  - cost: 1
+    conditions:
+      values: 0
+      mask: 0
+    effects:
+      values: 2
+      mask: 2
+    strategy:
+      rid: 2160919139276030136
+  - cost: 1
+    conditions:
+      values: 2
+      mask: 2
+    effects:
+      values: 1
+      mask: 1
+    strategy:
+      rid: 2160919139276030137
+  beliefs: {fileID: 11400000, guid: e50ccbfd71c4d6447a70bdbb14c6c78f, type: 2}
+  worldState: {fileID: 11400000, guid: 9a1b747190c9ae14c9c501055254f15a, type: 2}
   lightSwitch: {fileID: 994322868}
   restPoint: {fileID: 1387477163}
+  currentAction:
+    cost: 0
+    conditions:
+      values: 0
+      mask: 0
+    effects:
+      values: 0
+      mask: 0
+    strategy:
+      rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 2160919139276030136
+      type: {class: GotoPoint, ns: , asm: Assembly-CSharp}
+      data:
+        agent: {fileID: 217340628}
+        target: {fileID: 994322868}
+    - rid: 2160919139276030137
+      type: {class: ActivateObject, ns: , asm: Assembly-CSharp}
+      data:
+        agent: {fileID: 217340628}
+        lightSwitch: {fileID: 994322872}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,7 +1879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &830561117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1851,12 +1895,28 @@ MonoBehaviour:
   goals:
   - priority: 0
     desiredState:
-    - key: lightOn
-      value: 0
+      values: 0
+      mask: 0
+  actions: []
   beliefs: {fileID: 0}
   worldState: {fileID: 0}
   lightSwitch: {fileID: 994322868}
   restPoint: {fileID: 1742636210}
+  currentAction:
+    cost: 0
+    conditions:
+      values: 0
+      mask: 0
+    effects:
+      values: 0
+      mask: 0
+    strategy:
+      rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!195 &830561118
 NavMeshAgent:
   m_ObjectHideFlags: 0

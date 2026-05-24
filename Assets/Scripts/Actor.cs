@@ -4,7 +4,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Actor : MonoBehaviour
 {
-    [SerializeField] Goal[] goals;
+    public Goal[] goals;
     public Action[] actions;
     public Blackboard beliefs;
     public Blackboard worldState;
@@ -34,7 +34,24 @@ public class Actor : MonoBehaviour
     {
         if (plan == null)
         {
-            Planner.CreatePlan(this, goals);
+            if (Planner.CreatePlan(this, goals, out Plan newPlan))
+            {
+                plan = newPlan;
+            }
+        }
+        else
+        {
+            if (currentAction == null && plan.actions.Count > 0)
+            {
+                currentAction = plan.actions.Pop();
+                currentAction.strategy.Start();
+            }
+            
+            if (currentAction != null && currentAction.strategy.IsComplete())
+            {
+                currentAction.strategy.Stop();
+                currentAction = null;
+            }
         }
     }
 

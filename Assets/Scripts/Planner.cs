@@ -4,7 +4,7 @@ using Utils;
 
 public static class Planner
 {
-    public static Plan CreatePlan(Actor actor, Goal[] goals)
+    public static bool CreatePlan(Actor actor, Goal[] goals, out Plan plan)
     {
         Array.Sort(goals);
 
@@ -15,14 +15,12 @@ public static class Planner
             if (WorldState.IsCompatible(currentState, goal.desiredState) == false)
             {
                 Pathfinder pathfinder = new Pathfinder();
-                pathfinder.FindPath(goal.desiredState, currentState, actor.actions);
+                return pathfinder.FindPath(goal.desiredState, currentState, actor.actions, out plan);
             }
         }
 
-        Plan plan = new Plan();
-        plan.goal = goals[0];
-
-        return null;
+        plan = null;
+        return false;
     }    
 }
 
@@ -34,11 +32,11 @@ public class Pathfinder
 
     public static float Heuristic(WorldState a, WorldState b)
     {
-        uint difference = (b.values ^ a.values) & b.mask;
-        return WorldState.PopCount(difference);
+        WorldFlags difference = (b.values ^ a.values) & b.mask;
+        return WorldState.PopCount((uint)difference);
     }
 
-    public bool FindPath(WorldState start, WorldState goal, Action[] actions)
+    public bool FindPath(WorldState start, WorldState goal, Action[] actions, out Plan plan)
     {
         PriorityQueue<WorldState, float> frontier = new();
         frontier.Enqueue(start, 0);
@@ -52,6 +50,7 @@ public class Pathfinder
 
             if (WorldState.IsCompatible(current, goal))
             {
+                plan = MakePlan(start, goal);
                 return true;
             }
 
@@ -79,12 +78,27 @@ public class Pathfinder
             }
         }
 
+        plan = null;
         return false;
+    }
+
+    public Plan MakePlan(WorldState start, WorldState goal)
+    {
+        Plan plan = new Plan();
+
+        WorldState current = start;
+
+        while (!WorldState.IsCompatible(current, goal))
+        {
+            current = cameFrom[current];
+            plan.actions.Push(actionMap[current]);
+        }
+
+        return plan;
     }
 }
 
 public class Plan
 {
-    public Goal goal;
-    public Stack<Action> actions;
+    public Stack<Action> actions = new();
 }
