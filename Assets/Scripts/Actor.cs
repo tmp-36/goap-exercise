@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,9 +14,9 @@ public class Actor : MonoBehaviour
     [SerializeField] Transform restPoint;
 
     public Plan plan;
-    public Action currentAction;
+    Action currentAction = null;
 
-    NavMeshAgent agent;
+    [NonSerialized] public NavMeshAgent agent;
 
     private void OnValidate()
     {
@@ -27,30 +28,37 @@ public class Actor : MonoBehaviour
 
     private void Start()
     {
-        agent.SetDestination(restPoint.position);
+        // agent.SetDestination(restPoint.position);
     }
 
     private void Update()
     {
         if (plan == null)
         {
-            if (Planner.CreatePlan(this, goals, out Plan newPlan))
+            if (Planner.CreatePlan(this, goals, out plan))
             {
-                plan = newPlan;
+                currentAction = null;
             }
         }
         else
         {
             if (currentAction == null && plan.actions.Count > 0)
             {
-                currentAction = plan.actions.Pop();
+                currentAction = plan.actions.Dequeue();
                 currentAction.strategy.Start();
             }
             
             if (currentAction != null && currentAction.strategy.IsComplete())
             {
                 currentAction.strategy.Stop();
+                currentAction.Complete();
                 currentAction = null;
+            }
+
+            if (plan.actions.Count == 0)
+            {
+                currentAction = null;
+                plan = null;
             }
         }
     }
@@ -58,8 +66,8 @@ public class Actor : MonoBehaviour
     public WorldState GetPlanningState()
     {
         WorldState result = new WorldState();
-        result.values = beliefs.properties.values | worldState.properties.values;
-        result.mask = beliefs.properties.mask | worldState.properties.mask;
+        result.values = beliefs.runtime.values | worldState.runtime.values;
+        result.mask = beliefs.runtime.mask | worldState.runtime.mask;
         return result;
     }
 }

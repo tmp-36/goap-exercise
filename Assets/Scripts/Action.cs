@@ -14,12 +14,21 @@ public interface IActionStrategy
 [Serializable]
 public class Action
 {
+    public Blackboard blackboard;
     public float cost;
     public WorldState conditions;
     public WorldState effects;
 
     [SerializeReference, SubclassSelector]
     public IActionStrategy strategy;
+
+    public void Complete()
+    {
+        // TODO(Sergei): Which blackboard to apply this to
+        WorldState world = blackboard.runtime;
+        world.values = (world.values & ~effects.mask) | (effects.values & effects.mask);
+        blackboard.runtime = world;
+    }
 }
 
 [Serializable]
@@ -35,7 +44,15 @@ public class GotoPoint : IActionStrategy
 
     public bool IsComplete()
     {
-        return agent.remainingDistance <= 2.0f && !agent.pathPending;
+        if ((agent.remainingDistance <= agent.stoppingDistance) && !agent.pathPending)
+        {
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void Start()
@@ -59,10 +76,11 @@ public class ActivateObject : IActionStrategy
 {
     public NavMeshAgent agent;
     public Toggleable lightSwitch;
+    public bool value;
 
     public bool CanPerform()
     {
-        return Vector3.Distance(agent.transform.position, lightSwitch.transform.position) <= 2.5f;
+        return Vector3.Distance(agent.transform.position, lightSwitch.transform.position) <= 1.0f;
     }
 
     public bool IsComplete()
@@ -72,7 +90,7 @@ public class ActivateObject : IActionStrategy
 
     public void Start()
     {
-        lightSwitch.SetActive(true);
+        lightSwitch.SetActive(value);
     }
 
     public void Stop()

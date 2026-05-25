@@ -6,6 +6,7 @@ public enum WorldFlags : uint
     NONE = 0,
     LIGHT_ON = 1 << 0,
     NEAR_SWITCH = 1 << 1,
+    AT_REST = 1 << 2,
 };
 
 [Serializable]

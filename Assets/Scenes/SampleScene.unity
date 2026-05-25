@@ -705,17 +705,33 @@ MonoBehaviour:
     desiredState:
       values: 1
       mask: 1
+  - priority: 1
+    desiredState:
+      values: 4
+      mask: 4
   actions:
-  - cost: 1
+  - blackboard: {fileID: 11400000, guid: e50ccbfd71c4d6447a70bdbb14c6c78f, type: 2}
+    cost: 1
     conditions:
       values: 0
-      mask: 0
+      mask: 2
     effects:
       values: 2
-      mask: 2
+      mask: 6
     strategy:
       rid: 2160919139276030136
-  - cost: 1
+  - blackboard: {fileID: 11400000, guid: e50ccbfd71c4d6447a70bdbb14c6c78f, type: 2}
+    cost: 1
+    conditions:
+      values: 0
+      mask: 4
+    effects:
+      values: 4
+      mask: 6
+    strategy:
+      rid: 2160919157391753281
+  - blackboard: {fileID: 11400000, guid: 9a1b747190c9ae14c9c501055254f15a, type: 2}
+    cost: 1
     conditions:
       values: 2
       mask: 2
@@ -728,21 +744,9 @@ MonoBehaviour:
   worldState: {fileID: 11400000, guid: 9a1b747190c9ae14c9c501055254f15a, type: 2}
   lightSwitch: {fileID: 994322868}
   restPoint: {fileID: 1387477163}
-  currentAction:
-    cost: 0
-    conditions:
-      values: 0
-      mask: 0
-    effects:
-      values: 0
-      mask: 0
-    strategy:
-      rid: -2
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 2160919139276030136
       type: {class: GotoPoint, ns: , asm: Assembly-CSharp}
       data:
@@ -753,6 +757,12 @@ MonoBehaviour:
       data:
         agent: {fileID: 217340628}
         lightSwitch: {fileID: 994322872}
+        value: 1
+    - rid: 2160919157391753281
+      type: {class: GotoPoint, ns: , asm: Assembly-CSharp}
+      data:
+        agent: {fileID: 217340628}
+        target: {fileID: 1387477163}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1896,27 +1906,46 @@ MonoBehaviour:
   - priority: 0
     desiredState:
       values: 0
-      mask: 0
-  actions: []
-  beliefs: {fileID: 0}
-  worldState: {fileID: 0}
-  lightSwitch: {fileID: 994322868}
-  restPoint: {fileID: 1742636210}
-  currentAction:
-    cost: 0
+      mask: 1
+  actions:
+  - blackboard: {fileID: 0}
+    cost: 1
     conditions:
       values: 0
       mask: 0
     effects:
-      values: 0
-      mask: 0
+      values: 2
+      mask: 2
     strategy:
-      rid: -2
+      rid: 2160919157391753279
+  - blackboard: {fileID: 0}
+    cost: 1
+    conditions:
+      values: 2
+      mask: 2
+    effects:
+      values: 0
+      mask: 1
+    strategy:
+      rid: 2160919157391753280
+  beliefs: {fileID: 11400000, guid: 727b09efb76db1144ac58041fe4ae272, type: 2}
+  worldState: {fileID: 11400000, guid: 9a1b747190c9ae14c9c501055254f15a, type: 2}
+  lightSwitch: {fileID: 994322868}
+  restPoint: {fileID: 1742636210}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 2160919157391753279
+      type: {class: GotoPoint, ns: , asm: Assembly-CSharp}
+      data:
+        agent: {fileID: 0}
+        target: {fileID: 994322868}
+    - rid: 2160919157391753280
+      type: {class: ActivateObject, ns: , asm: Assembly-CSharp}
+      data:
+        agent: {fileID: 830561118}
+        lightSwitch: {fileID: 994322872}
+        value: 0
 --- !u!195 &830561118
 NavMeshAgent:
   m_ObjectHideFlags: 0

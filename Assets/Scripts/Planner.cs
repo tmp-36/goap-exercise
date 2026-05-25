@@ -11,6 +11,8 @@ public static class Planner
         foreach (Goal goal in goals)
         {
             WorldState currentState = actor.GetPlanningState();
+            //goal.mask = start.mask;
+            currentState.mask = goal.desiredState.mask;
 
             if (WorldState.IsCompatible(currentState, goal.desiredState) == false)
             {
@@ -50,7 +52,7 @@ public class Pathfinder
 
             if (WorldState.IsCompatible(current, goal))
             {
-                plan = MakePlan(start, goal);
+                plan = MakePlan(start, current);
                 return true;
             }
 
@@ -58,10 +60,13 @@ public class Pathfinder
             {
                 if (WorldState.AdvancesGoal(current, action.effects))
                 {
+                    goal.mask |= action.conditions.mask;
+
                     WorldState next = current;
                     next.mask &= ~action.effects.mask;
+                    next.values &= next.mask;
                     next.mask |= action.conditions.mask;
-                    next.values = (next.values & ~action.conditions.mask) | action.conditions.values;
+                    next.values = (next.values & ~action.conditions.mask) | (action.conditions.values & action.conditions.mask);
 
                     float newCost = costSoFar[current] + action.cost;
 
@@ -86,12 +91,16 @@ public class Pathfinder
     {
         Plan plan = new Plan();
 
-        WorldState current = start;
+        WorldState current = goal;
 
-        while (!WorldState.IsCompatible(current, goal))
+        while (!current.Equals(start))
         {
+            if (actionMap.ContainsKey(current))
+            {
+                plan.actions.Enqueue(actionMap[current]);
+            }
+
             current = cameFrom[current];
-            plan.actions.Push(actionMap[current]);
         }
 
         return plan;
@@ -100,5 +109,5 @@ public class Pathfinder
 
 public class Plan
 {
-    public Stack<Action> actions = new();
+    public Queue<Action> actions = new();
 }
