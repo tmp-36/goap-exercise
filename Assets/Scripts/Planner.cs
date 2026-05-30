@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using Utils;
 
 public static class Planner
@@ -63,10 +64,10 @@ public class Pathfinder
                     goal.mask |= action.conditions.mask;
 
                     WorldState next = current;
+                    next.values ^= next.mask;
                     next.mask &= ~action.effects.mask;
-                    next.values &= next.mask;
+                    next.values ^= (next.values ^ action.conditions.values) & action.conditions.mask;
                     next.mask |= action.conditions.mask;
-                    next.values = (next.values & ~action.conditions.mask) | (action.conditions.values & action.conditions.mask);
 
                     float newCost = costSoFar[current] + action.cost;
 

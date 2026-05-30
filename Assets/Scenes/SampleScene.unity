@@ -1889,7 +1889,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &830561117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1907,18 +1907,32 @@ MonoBehaviour:
     desiredState:
       values: 0
       mask: 1
+  - priority: 1
+    desiredState:
+      values: 4
+      mask: 4
   actions:
-  - blackboard: {fileID: 0}
+  - blackboard: {fileID: 11400000, guid: 727b09efb76db1144ac58041fe4ae272, type: 2}
     cost: 1
     conditions:
       values: 0
-      mask: 0
+      mask: 2
     effects:
       values: 2
-      mask: 2
+      mask: 6
     strategy:
       rid: 2160919157391753279
-  - blackboard: {fileID: 0}
+  - blackboard: {fileID: 11400000, guid: 727b09efb76db1144ac58041fe4ae272, type: 2}
+    cost: 1
+    conditions:
+      values: 0
+      mask: 4
+    effects:
+      values: 4
+      mask: 6
+    strategy:
+      rid: 2160919273296363520
+  - blackboard: {fileID: 11400000, guid: 9a1b747190c9ae14c9c501055254f15a, type: 2}
     cost: 1
     conditions:
       values: 2
@@ -1938,7 +1952,7 @@ MonoBehaviour:
     - rid: 2160919157391753279
       type: {class: GotoPoint, ns: , asm: Assembly-CSharp}
       data:
-        agent: {fileID: 0}
+        agent: {fileID: 830561118}
         target: {fileID: 994322868}
     - rid: 2160919157391753280
       type: {class: ActivateObject, ns: , asm: Assembly-CSharp}
@@ -1946,6 +1960,11 @@ MonoBehaviour:
         agent: {fileID: 830561118}
         lightSwitch: {fileID: 994322872}
         value: 0
+    - rid: 2160919273296363520
+      type: {class: GotoPoint, ns: , asm: Assembly-CSharp}
+      data:
+        agent: {fileID: 830561118}
+        target: {fileID: 1742636210}
 --- !u!195 &830561118
 NavMeshAgent:
   m_ObjectHideFlags: 0
