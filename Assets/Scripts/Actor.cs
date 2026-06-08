@@ -26,6 +26,14 @@ public class Actor : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        foreach (var action in actions)
+        {
+            action.Init(this);
+        }
+    }
+
     private void Start()
     {
         // agent.SetDestination(restPoint.position);
@@ -45,12 +53,12 @@ public class Actor : MonoBehaviour
             if (currentAction == null && plan.actions.Count > 0)
             {
                 currentAction = plan.actions.Dequeue();
-                currentAction.strategy.Start();
+                currentAction.Start();
             }
             
             if (currentAction != null && currentAction.strategy.IsComplete())
             {
-                currentAction.strategy.Stop();
+                currentAction.Stop();
                 currentAction.Complete();
                 currentAction = null;
             }

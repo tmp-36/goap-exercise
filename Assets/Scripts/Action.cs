@@ -4,6 +4,7 @@ using UnityEngine.AI;
 
 public interface IActionStrategy
 {
+    public abstract void Init(Actor actor);
     public abstract void Start();
     public abstract void Update(float deltaTime);
     public abstract void Stop();
@@ -22,6 +23,29 @@ public class Action
     [SerializeReference, SubclassSelector]
     public IActionStrategy strategy;
 
+    [NonSerialized] public Actor actor;
+
+    public void Init(Actor actor)
+    {
+        this.actor = actor;
+        strategy.Init(actor);
+    }
+
+    public void Start()
+    {
+        strategy.Start();
+    }
+
+    public void Stop()
+    {
+        strategy.Stop();
+    }
+
+    public void Update(float deltaTime)
+    {
+        strategy.Update(deltaTime);
+    }
+
     public void Complete()
     {
         // TODO(Sergei): Which blackboard to apply this to
@@ -34,8 +58,15 @@ public class Action
 [Serializable]
 public class GotoPoint : IActionStrategy
 {
-    public NavMeshAgent agent;
     public Transform target;
+    NavMeshAgent agent;
+    Actor actor;
+
+    public void Init(Actor actor)
+    {
+        this.actor = actor;
+        agent = actor.agent;
+    }
 
     public bool CanPerform()
     {
@@ -74,13 +105,19 @@ public class GotoPoint : IActionStrategy
 [Serializable]
 public class ActivateObject : IActionStrategy
 {
-    public NavMeshAgent agent;
     public Toggleable lightSwitch;
     public bool value;
+    
+    NavMeshAgent agent;
 
     public bool CanPerform()
     {
         return Vector3.Distance(agent.transform.position, lightSwitch.transform.position) <= 1.0f;
+    }
+
+    public void Init(Actor actor)
+    {
+        agent = actor.agent;
     }
 
     public bool IsComplete()
